@@ -84,7 +84,7 @@ rails db:migrate
 まずは、会社テーブルに"A会社"、"B会社"を追加します。
 
 ```rb
-rails c
+$ rails c
 ## 会社を追加
 > company = Company.new(name: "A会社")
 > company.save
@@ -96,7 +96,7 @@ rails c
 次に、社員を"A会社"に2名、"B会社"に1名追加します。
 
 ```rb
-rails c
+$ rails c
 ## 社員3人追加
 > employee = Employee.new(name: "太郎", company_id: 1)
 > employee.save
@@ -179,26 +179,28 @@ end
 このように設定をすることで、例えば、
 
 ```rb
-rails c
+$ rails c
 
 > company = Company.first
 > company.employees
 ```
 
 とすることで、取得した会社のレコードにひもづく社員のレコードが全て取得できます。  
-※`Company.first`は、テーブル内の一番最初のレコードを取得するメソッド。  
-※`company.employee`は、アソシエーションで紐づいているレコードを取得するメソッド。モデルにアソシエーションの設定をすることで、アソシエーション名と同じ名前の関連情報を取得するメソッドが使えるようになります。
+
+**解説**
+> `(モデル名).first`は、指定したモデルのテーブル内の一番最初のレコードを取得するメソッド。  
+> `company.employees`は、アソシエーションで紐づいているレコードを取得するメソッド。モデルにアソシエーションの設定をすることで、アソシエーション名と同じ名前の関連情報を取得するメソッドが使えるようになります。
 
 さらに、
 
 ```rb
-rails c
+$ rails c
 
 > employee = Employee.first
 > employee.company
 ```
 
-とすることで、社員が所属している会社のレコードを取得できます。ぜひご自身でも手を動かしてご確認ください。
+とすることで、社員が所属している会社のレコードを取得できます。
 
 ### アソシエーションによるメリット
 
@@ -209,7 +211,7 @@ rails c
 外部キーの項で、"A会社"の社員を取得するコマンドをかきました。
 
 ```rb
-rails c
+$ rails c
 
 > Employee.where(company_id: 1)
 ```
@@ -217,7 +219,7 @@ rails c
 アソシエーションの設定後は、以下のように書くことができます。
 
 ```rb
-rails c
+$ rails c
 ## A会社に属している社員を取得
 > company = Company.find(1)
 > company.employees
@@ -240,12 +242,12 @@ rails c
   updated_at: Fri, 09 Mar 2018 06:20:20 UTC +00:00>]
 ```
 
-#### 2. 外部キーが勝手に入る
+#### 2. 外部キーを手動で設定する必要がない
 
 外部キーの項で、"A会社"に社員を追加するコマンドを書きました。
 
 ```rb
-rails c
+$ rails c
 ## 社員追加
 > employee = Employee.new(name: "太郎", company_id: 1)
 > employee.save
@@ -254,7 +256,7 @@ rails c
 アソシエーションの設定後は、以下のように書くことができます。
 
 ```rb
-rails c
+$ rails c
 ## A会社に属している社員を取得
 > company = Company.find(1)
 > company.employees.build(name: "太郎")
@@ -264,8 +266,12 @@ rails c
 <Employee id: nil, name: "太郎", company_id: 1, created_at: nil, updated_at: nil>
 ```
 
+**解説**
+> `親モデル.子モデル.build(カラム名: 値)`
+> このコマンドで、親モデルに属する子モデルのインスタンスを新しく生成することができます。
+
 先ほどは、新しく社員を追加する際、外部キーとして会社idを指定する必要がありましたが、アソシエーションを用いればその記載をする必要がなくなりました。
-idではなくインスタンス`company`から社員の登録をすることで、コードの可読性が高まりましたね。
+こちらの記法のほうが`id`で指定する必要がない分、コードの可読性が高まりましたね。
 
 
 ## まとめ
