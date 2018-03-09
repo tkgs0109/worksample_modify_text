@@ -160,7 +160,7 @@ Railsでは、結びつけたいテーブルのモデルに対して、`has_many
 
 ```rb
 class Company
-   has_many :employees
+  has_many :employees
 end
 ```
 
@@ -169,7 +169,7 @@ end
 
 ```rb
 class Employee
-   belongs_to :company
+  belongs_to :company
 end
 ```
 
@@ -333,13 +333,10 @@ https://diveintocode.jp/diver/questions/new
 
 ```rb
 class Company < ActiveRecord::Base
-    has_many :employees, dependent: :destroy
+  has_many :employees, dependent: :destroy
 end
 ```
 
 このように、親側のモデルに書いてある`has_many`の部分に`dependent: :destroy`というオプションを付け加えることで、親側のレコードが消えた時に、それに紐づく子側のレコードも削除されます。
 
-`rails 一対多 destroy`
-`rails association dependent`
-
-などとググると出てきます。ググる力もエンジニアにはとても大切なものなので、わからないことがあったらググる癖を身につけておきましょう。
+"rails 一対多 destroy"や、"rails association dependent"などでググると出てきます。ググる力もエンジニアにはとても大切なものなので、わからないことがあったらググる癖を身につけておきましょう。
