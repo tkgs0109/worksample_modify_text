@@ -268,12 +268,17 @@ https://diveintocode.jp/diver/questions/new
 ```rb
 def linear_search(numbers,value)
   i = 0
+
+  # 0番目以上numbers.length(=最終要素+1)番目未満でループを回す
   while i < numbers.length
+
+    # もし検索対象と一致すれば、そのインデックスを返す。
     if numbers[i] == value
       return i
     end
     i+=1
   end
+  # 検索対象がみつからず、ループを抜けてしまったら、"None"を返す
   return "None"
 end
 ```
@@ -282,19 +287,35 @@ end
 
 ```rb
 def binary_search(numbers,value)
+  # head:配列の先頭インデックス(初期値:0)
   head = 0
+  # tail:配列の末尾インデックス(初期値:配列の要素数-1)
   tail = numbers.length - 1
 
+  # head 以上 tail 以下でループを実行
   while head <= tail do
+    # 中央の要素の特定。
+    # roundメソッド => 四捨五入
     center = ((head + tail) / 2).round
+
+    # 中央の要素がvalueだったら、インデックスを返して終了
     if (numbers[center] == value)
       return center
+
+    # 中央の要素の値がターゲットよりも小さければ(ターゲットが中央より右側にある)
+    # 中央の右隣の要素を新しい`head`にする
     elsif (numbers[center] < value)
       head = center + 1
+    # 中央の要素の値がターゲットよりも大きければ(ターゲットが中央より左側にある)
+    # 中央の左隣の要素を新しい`tail`にする
     else
       tail = center - 1
     end
   end
+
+  # 検索対象がみつからず、ループを抜けてしまったら、"None"を返す。
   return "None"
 end
 ```
+
+**解説**
