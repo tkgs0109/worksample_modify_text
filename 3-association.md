@@ -86,11 +86,11 @@ rails db:migrate
 ```rb
 rails c
 ## 会社を追加
-company = Company.new(name: "A会社")
-company.save
+> company = Company.new(name: "A会社")
+> company.save
 
-company = Company.new(name: "B会社")
-company.save
+> company = Company.new(name: "B会社")
+> company.save
 ```
 
 次に、社員を"A会社"に2名、"B会社"に1名追加します。
@@ -98,14 +98,14 @@ company.save
 ```rb
 rails c
 ## 社員3人追加
-employee = Employee.new(name: "太郎", company_id: 1)
-employee.save
+> employee = Employee.new(name: "太郎", company_id: 1)
+> employee.save
 
-employee = Employee.new(name: "次郎", company_id: 1)
-employee.save
+> employee = Employee.new(name: "次郎", company_id: 1)
+> employee.save
 
-employee = Employee.new(name: "三郎", company_id: 2)
-employee.save
+> employee = Employee.new(name: "三郎", company_id: 2)
+> employee.save
 ```
 
 ### データの取得
@@ -113,7 +113,7 @@ employee.save
 
 ```rb
 ## A会社に属している社員を取得
-Employee.where(company_id: 1)
+> Employee.where(company_id: 1)
 
 ## 発行されたSQL文
   Employee Load (0.3ms)  SELECT "employees".* FROM "employees" WHERE "employees"."company_id" = $1  [["company_id", 1]]
@@ -163,7 +163,7 @@ class Company
    has_many :employees
 end
 ```
-<br>
+
 **社員は / 一つの / 会社に属する**  
 `app/models/employee.rb`
 
@@ -180,8 +180,9 @@ end
 
 ```rb
 rails c
-company = Company.first
-company.employees
+
+> company = Company.first
+> company.employees
 ```
 
 とすることで、取得した会社のレコードにひもづく社員のレコードが全て取得できます。  
@@ -192,8 +193,9 @@ company.employees
 
 ```rb
 rails c
-employee = Employee.first
-employee.company
+
+> employee = Employee.first
+> employee.company
 ```
 
 とすることで、社員が所属している会社のレコードを取得できます。ぜひご自身でも手を動かしてご確認ください。
@@ -207,15 +209,18 @@ employee.company
 外部キーの項で、"A会社"の社員を取得するコマンドをかきました。
 
 ```rb
-Employee.where(company_id: 1)
+rails c
+
+> Employee.where(company_id: 1)
 ```
 
 アソシエーションの設定後は、以下のように書くことができます。
 
 ```rb
+rails c
 ## A会社に属している社員を取得
-company = Company.find(1)
-company.employees
+> company = Company.find(1)
+> company.employees
 
 ## 発行されたSQL文
   Employee Load (0.2ms)  SELECT "employees".* FROM "employees" WHERE "employees"."company_id" = $1  [["company_id", 1]]
@@ -233,7 +238,6 @@ company.employees
   company_id: 1,
   created_at: Fri, 09 Mar 2018 06:20:20 UTC +00:00,
   updated_at: Fri, 09 Mar 2018 06:20:20 UTC +00:00>]
-
 ```
 
 #### 2. 外部キーが勝手に入る
@@ -241,17 +245,19 @@ company.employees
 外部キーの項で、"A会社"に社員を追加するコマンドを書きました。
 
 ```rb
+rails c
 ## 社員追加
-employee = Employee.new(name: "太郎", company_id: 1)
-employee.save
+> employee = Employee.new(name: "太郎", company_id: 1)
+> employee.save
 ```
 
 アソシエーションの設定後は、以下のように書くことができます。
 
 ```rb
+rails c
 ## A会社に属している社員を取得
-company = Company.find(1)
-company.employees.build(name: "太郎")
+> company = Company.find(1)
+> company.employees.build(name: "太郎")
 
 ## 結果
 =>
