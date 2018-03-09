@@ -54,76 +54,79 @@ Railsでは「アソシエーション」という機能を使用することに
 
 ### railsコマンドで外部キーのついたテーブルを作成
 
-では、ここで実際に外部キーの付いたテーブルを作成してみましょう。
+実際に上の例のように、外部キーの付いたテーブルを作成してみましょう。
+まずは会社モデルを作成します。
 
 ```rb
-## 会社モデルを生成
+## 会社モデルを作成
 rails g model Company name:string
 ```
 
-次に社員テーブルを作成します。
-
+次に社員モデルを作成します。
 社員は会社と結び付きがあるので、外部キーを持っている必要があります。
-
-外部キーを持つテーブルは、モデル作成コマンド
-```rb
-rails g model Employee name:string
-```
-に
-```rb
-company(結びつき先モデル名):references
-```
-
-を付け加えることにより作成可能です。
-
-つまり今回の場合、以下のようになります。
+外部キーを持つテーブルは、モデル作成コマンドに`(結びつき先モデル名):references`を付け加えることにより作成可能です。
+今回の場合、以下のようになります。
 
 ```rb
-## 社員モデルを生成
 rails g model Employee name:string company:references
 ```
 
 ここで一旦、マイグレーションを実行しておきましょう。
 
-
-では、ここで特定の会社に属している社員をとってきましょう。
-
-
-まずは、会社テーブルに「A会社」「B会社」を追加します。
 ```rb
-## 会社を追加
+rails db:migrate
+```
+
+では、社員と会社の結びつきを設定しましょう。
+まずは、会社テーブルに"A会社"、"B会社"を追加します。
+```rb
 rails c
-company = Company.new({:name=> "A会社"})
+## 会社を追加
+company = Company.new(name: "A会社")
 company.save
-company = Company.new({:name=> "B会社"})
+
+company = Company.new(name: "B会社")
 company.save
 ```
 
-次に、従業員を「A会社」に２名、「B会社」に一名追加します。
+次に、従業員を"A会社"に2名、"B会社"に1名追加します。
 ```rb
-## 社員３人追加
-employee = Employee.new({:name=> "太郎", :company_id=> 1})
+rails c
+## 社員3人追加
+employee = Employee.new(name: "太郎", company_id: 1)
 employee.save
 
-employee = Employee.new({:name=> "次郎", :company_id=> 1})
+employee = Employee.new(name: "次郎", company_id: 1)
 employee.save
 
-employee = Employee.new({:name=> "三郎", :company_id=> 2})
+employee = Employee.new(name: "三郎", company_id: 2)
 employee.save
 ```
 
 ### ワーク
-ここで、会社Aに属する従業員を全て取得するコマンドを書いてみましょう。
+ここで、"会社A"に属する従業員を全て取得するコマンドを実行してみましょう。
 
 ```rb
-## 会社Aに属している会社員を取得
-Employee.where(company_id: 1)
+## 会社Aに属している社員を取得
+> Employee.where(company_id: 1)
 
-=> 結果
-=> <ActiveRecord::Relation [
-<Employee id: 1, name: "太郎", company_id: 1, created_at: "2017-07-17 09:21:36", updated_at: "2017-07-17 09:21:36">,
-<Employee id: 2, name: "次郎", company_id: 1, created_at: "2017-07-17 09:25:09", updated_at: "2017-07-17 09:25:09">
-]>
+## 発行されたSQL文
+  Employee Load (0.3ms)  SELECT "employees".* FROM "employees" WHERE "employees"."company_id" = $1  [["company_id", 1]]
+
+## 結果
+=> [#<Employee:0x0055ff17856b48
+  id: 1,
+  name: "太郎",
+  company_id: 1,
+  created_at: Fri, 09 Mar 2018 06:20:10 UTC +00:00,
+  updated_at: Fri, 09 Mar 2018 06:20:10 UTC +00:00>,
+ #<Employee:0x0055ff178569e0
+  id: 2,
+  name: "次郎",
+  company_id: 1,
+  created_at: Fri, 09 Mar 2018 06:20:20 UTC +00:00,
+  updated_at: Fri, 09 Mar 2018 06:20:20 UTC +00:00>]
+
 ```
 このように扱うことが出来ます。
 
